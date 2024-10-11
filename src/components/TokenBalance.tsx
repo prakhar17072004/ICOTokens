@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import "../app/globals.css";
 
@@ -7,12 +7,12 @@ interface TokenBalanceProps {
 }
 
 const TokenBalance: React.FC<TokenBalanceProps> = ({ address }) => {
-    const [tokenBalance, setTokenBalance] = useState<string>(''); // State for token balance
+    const [tokenBalance, setTokenBalance] = useState<string>('0'); // Initialize balance to '0'
     const tokenAddress = '0x73014d0ECe38D562Ec0Fbc0384dfa192AbDD0e1c'; // Replace with your token address
 
     const fetchTokenBalance = async () => {
         // Check if MetaMask is installed
-        if (typeof window.ethereum === 'undefined') {
+        if (!(window as any).ethereum) {
             alert('MetaMask is not installed. Please install it to use this feature.');
             return; // Exit the function if MetaMask is not detected
         }
@@ -22,13 +22,13 @@ const TokenBalance: React.FC<TokenBalanceProps> = ({ address }) => {
             "function decimals() view returns (uint8)"
         ];
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum); // No need for type assertion
+        const provider = new ethers.BrowserProvider((window as any).ethereum); // Use the provider
         const contract = new ethers.Contract(tokenAddress, tokenABI, provider); // Use provider instead of signer
 
         try {
             const balance = await contract.balanceOf(address);
             const decimals = await contract.decimals();
-            setTokenBalance(ethers.utils.formatUnits(balance, decimals));
+            setTokenBalance(ethers.formatUnits(balance, decimals));
         } catch (error) {
             console.error('Error fetching token balance:', error);
             alert('Error fetching token balance. Please try again later.');
@@ -36,14 +36,13 @@ const TokenBalance: React.FC<TokenBalanceProps> = ({ address }) => {
     };
 
     useEffect(() => {
-        if (address) {
-            fetchTokenBalance();
-        }
-    }, [address]);
+        fetchTokenBalance(); // Call the function to fetch token balance on mount
+    }, [address]); // Add address as a dependency to refetch when it changes
 
     return (
-        <div>
-            <h3>Token Balance: {tokenBalance}</h3>
+        <div className="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto text-center">
+            <h3 className="text-2xl font-semibold mb-4">Token Balance</h3> {/* Title */}
+            <p className="text-lg text-gray-700">Balance: <span className="font-bold">{tokenBalance}</span> MTK</p> {/* Display token balance */}
         </div>
     );
 };

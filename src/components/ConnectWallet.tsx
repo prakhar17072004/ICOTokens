@@ -11,14 +11,14 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ setAddress }) => {
 
     const connectWallet = async () => {
         if ((window as any).ethereum) {
-            const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+            const provider = new ethers.BrowserProvider((window as any).ethereum);
             const accounts = await provider.send('eth_requestAccounts', []);
-            const signer = provider.getSigner();
+            const signer = await provider.getSigner();
             const walletAddress = await signer.getAddress();
             setAddress(walletAddress);
 
             const walletBalance = await provider.getBalance(walletAddress);
-            setBalance(ethers.utils.formatEther(walletBalance));
+            setBalance(ethers.formatEther(walletBalance));
         } else {
             alert('MetaMask not detected!');
         }
@@ -26,11 +26,17 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ setAddress }) => {
 
     useEffect(() => {
         connectWallet();
-    }, []);
+    }, []); // Remove connectWallet from the dependency array
 
     return (
-        <div>
-            <h2>ETH Balance: {balance}</h2>
+        <div className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-md mx-auto">
+            <h2 className="text-2xl font-bold mb-4">ETH Balance: {balance} ETH</h2>
+            <button 
+                onClick={connectWallet} 
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+            >
+                Connect Wallet
+            </button>
         </div>
     );
 };
