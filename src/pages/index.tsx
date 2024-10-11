@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import "../app/globals.css";
 import ConnectWallet from '../components/ConnectWallet';
 import TokenBalance from '../components/TokenBalance';
 import SendTokens from '../components/SendTokens'; // Make sure to import SendTokens correctly
-
+import "../app/globals.css";
 const Home: React.FC = () => {
     const [address, setAddress] = useState<string>('');
 

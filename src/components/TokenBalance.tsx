@@ -37,7 +37,7 @@ const TokenBalance: React.FC<TokenBalanceProps> = ({ address }) => {
 
     useEffect(() => {
         fetchTokenBalance(); // Call the function to fetch token balance on mount
-    }, [address]); // Add address as a dependency to refetch when it changes
+    }, [fetchTokenBalance]); // Add address as a dependency to refetch when it changes
 
     return (
         <div className="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto text-center">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
 import "../app/globals.css";
+import { ethers } from 'ethers';
+
 
 interface ConnectWalletProps {
     setAddress: (address: string) => void;
@@ -26,10 +27,10 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ setAddress }) => {
 
     useEffect(() => {
         connectWallet();
-    }, []); // Remove connectWallet from the dependency array
+    }, [connectWallet]); // Remove connectWallet from the dependency array
 
     return (
-        <div className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-md mx-auto">
+        <div className="flex flex-col items-center justify-center bg-green-800 shadow-md rounded-lg p-6 max-w-md mx-auto">
             <h2 className="text-2xl font-bold mb-4">ETH Balance: {balance} ETH</h2>
             <button 
                 onClick={connectWallet} 
