@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import "../app/globals.css";
+//import '../app/globals.css';
 
 interface TokenBalanceProps {
     address: string; // Type for the address prop

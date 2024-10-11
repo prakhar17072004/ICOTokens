@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import "../app/globals.css";
+//import '../app/globals.css';
 import { ethers } from 'ethers';
 
 

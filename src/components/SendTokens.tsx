@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { ethers } from 'ethers';
-import "../app/globals.css";
+//import '../app/globals.css';
 
 interface SendTokensProps {
     address: string; // Type for the address prop
