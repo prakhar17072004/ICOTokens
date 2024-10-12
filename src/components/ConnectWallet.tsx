@@ -1,43 +1,82 @@
 import { useState, useEffect } from 'react';
-//import '../app/globals.css';
 import { ethers } from 'ethers';
-
 
 interface ConnectWalletProps {
     setAddress: (address: string) => void;
 }
 
 const ConnectWallet: React.FC<ConnectWalletProps> = ({ setAddress }) => {
-    const [balance, setBalance] = useState<string>('');
+    const [balance, setBalance] = useState<string>(''); // Store wallet balance
+    const [isConnected, setIsConnected] = useState<boolean>(false); // Track connection status
+    const [loading, setLoading] = useState<boolean>(false); // Track loading state
 
+    // Simulate connecting to MetaMask and getting wallet details
     const connectWallet = async () => {
-        if ((window as any).ethereum) {
-            const provider = new ethers.BrowserProvider((window as any).ethereum);
-            const accounts = await provider.send('eth_requestAccounts', []);
-            const signer = await provider.getSigner();
-            const walletAddress = await signer.getAddress();
-            setAddress(walletAddress);
+        setLoading(true); // Start loading
+        try {
+            if ((window as any).ethereum) {
+                const provider = new ethers.BrowserProvider((window as any).ethereum);
+                const accounts = await provider.send('eth_requestAccounts', []);
+                const signer = await provider.getSigner();
+                const walletAddress = await signer.getAddress();
+                setAddress(walletAddress);
 
-            const walletBalance = await provider.getBalance(walletAddress);
-            setBalance(ethers.formatEther(walletBalance));
-        } else {
-            alert('MetaMask not detected!');
+                const walletBalance = await provider.getBalance(walletAddress);
+                setBalance(ethers.formatEther(walletBalance));
+
+                // Simulate delay before completing connection
+                setTimeout(() => {
+                    setIsConnected(true); // Set connection status to true
+                    setLoading(false); // Stop loading
+                }, 2000); // 2 seconds delay
+            } else {
+                alert('MetaMask not detected!');
+                setLoading(false); // Stop loading if no MetaMask
+            }
+        } catch (error) {
+            console.error(error);
+            setLoading(false); // Stop loading in case of error
         }
     };
 
+    // Simulate disconnecting wallet
+    const disconnectWallet = () => {
+        setLoading(true); // Start loading
+        setTimeout(() => {
+            setAddress(''); // Clear address
+            setBalance(''); // Clear balance
+            setIsConnected(false); // Set connection status to false
+            setLoading(false); // Stop loading
+        }, 2000); // 2 seconds delay
+    };
+
     useEffect(() => {
-        connectWallet();
-    }, [connectWallet]); // Remove connectWallet from the dependency array
+        connectWallet(); // Automatically try to connect on page load
+    }, [setAddress]);
 
     return (
         <div className="flex flex-col items-center justify-center bg-green-800 shadow-md rounded-lg p-6 max-w-md mx-auto">
             <h2 className="text-2xl font-bold mb-4">ETH Balance: {balance} ETH</h2>
-            <button 
-                onClick={connectWallet} 
-                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
-            >
-                Connect Wallet
-            </button>
+
+            {loading ? (
+                <p className="text-white">Processing...</p> // Show loading message/spinner
+            ) : (
+                !isConnected ? (
+                    <button
+                        onClick={connectWallet}
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+                    >
+                        Connect Wallet
+                    </button>
+                ) : (
+                    <button
+                        onClick={disconnectWallet}
+                        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+                    >
+                        Disconnect Wallet
+                    </button>
+                )
+            )}
         </div>
     );
 };
