@@ -55,7 +55,7 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ setAddress }) => {
     }, [setAddress]);
 
     return (
-        <div className="flex flex-col items-center justify-center bg-green-800 shadow-md rounded-lg p-6 max-w-md mx-auto">
+        <div className="flex flex-col items-center justify-center bg-cyan-800 shadow-md rounded-lg p-6 max-w-md mx-auto">
             <h2 className="text-2xl font-bold mb-4">ETH Balance: {balance} ETH</h2>
 
             {loading ? (
@@ -71,7 +71,7 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ setAddress }) => {
                 ) : (
                     <button
                         onClick={disconnectWallet}
-                        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+                        className="bg-blue-700 hover:bg-slate-900 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
                     >
                         Disconnect Wallet
                     </button>
