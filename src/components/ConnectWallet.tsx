@@ -10,6 +10,51 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ setAddress }) => {
     const [isConnected, setIsConnected] = useState<boolean>(false); // Track connection status
     const [loading, setLoading] = useState<boolean>(false); // Track loading state
 
+    // Holsky network configuration
+    const holskyChainId = `0x${Number(17000).toString(16)}`; // Holsky's chain ID (Example: 0x1392 for 5010 in hex)
+    const holskyNetwork = {
+        chainId: holskyChainId,
+        chainName: 'Holsky ',
+        nativeCurrency: {
+            name: 'holsky',
+            symbol: 'ETH', // Native currency
+            decimals: 18,
+        },
+        rpcUrls: ["https://rpc.ankr.com/eth_holesky"], // RPC URL for Holsky testnet
+        blockExplorerUrls: ["https://holesky.etherscan.io/"], // Optional: Explorer URL
+    };
+
+    // Helper function to add or switch to Holsky network
+    const switchToHolskyNetwork = async () => {
+        try {
+            if ((window as any).ethereum) {
+                const provider = new ethers.BrowserProvider((window as any).ethereum);
+                const currentNetwork = await provider.send('eth_chainId', []);
+                if (currentNetwork !== holskyChainId) {
+                    // Try to switch to Holsky Testnet
+                    try {
+                        await (window as any).ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: holskyChainId }],
+                        });
+                    } catch (switchError: any) {
+                        // If the network is not added, add it
+                        if (switchError.code === 4902) {
+                            await (window as any).ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [holskyNetwork],
+                            });
+                        } else {
+                            throw switchError;
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Failed to switch or add Holsky network:', error);
+        }
+    };
+
     // Simulate connecting to MetaMask and getting wallet details
     const connectWallet = async () => {
         setLoading(true); // Start loading
@@ -23,6 +68,9 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ setAddress }) => {
 
                 const walletBalance = await provider.getBalance(walletAddress);
                 setBalance(ethers.formatEther(walletBalance));
+
+                // Switch to Holsky network
+                await switchToHolskyNetwork();
 
                 // Simulate delay before completing connection
                 setTimeout(() => {
