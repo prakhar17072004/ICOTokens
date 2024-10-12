@@ -40,9 +40,9 @@ const TokenBalance: React.FC<TokenBalanceProps> = ({ address }) => {
     }, [address]); // Add address as a dependency to refetch when it changes
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto text-center">
+        <div className="bg-slate-400 shadow-md rounded-lg p-6 max-w-lg mx-auto text-center">
             <h3 className="text-2xl font-semibold mb-4">Token Balance</h3> {/* Title */}
-            <p className="text-lg text-gray-700">Balance: <span className="font-bold">{tokenBalance}</span> MTK</p> {/* Display token balance */}
+            <p className="text-lg mt-10">Balance: <span className="font-bold text-gray-900">{tokenBalance}</span> MTK</p> {/* Display token balance */}
         </div>
     );
 };

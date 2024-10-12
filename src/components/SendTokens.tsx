@@ -33,7 +33,7 @@ const SendTokens: React.FC<SendTokensProps> = ({ address }) => {
     };
 
     return (
-        <form onSubmit={sendTokens} className="bg-white shadow-md rounded-lg p-6 space-y-4 max-w-md mx-auto">
+        <form onSubmit={sendTokens} className="bg-slate-400 shadow-md rounded-lg p-6 space-y-4 max-w-md mx-auto text-center">
             <h2 className="text-xl font-semibold mb-4">Send Tokens</h2>
             <input
                 className="border border-gray-300 p-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
